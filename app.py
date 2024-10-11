@@ -25,14 +25,26 @@ def detect_conflicts(appointments_df):
     return conflicts
 
 # Function to generate reminders for appointments scheduled for the next day
-def generate_reminders(appointments_df):   
+def generate_reminders(appointments_df, reminder_template="Reminder: You have an appointment scheduled on {date} at {time}. Please arrive 10 minutes early."):
+    """
+    Generate reminders for appointments scheduled for the next day.
+    
+    Parameters:
+    appointments_df (pd.DataFrame): DataFrame containing appointment information.
+    reminder_template (str): Template for the reminder message. Default is a standard reminder message.
+    
+    Returns:
+    list: List of tuples containing patient ID and reminder message.
+    """
     tomorrow_date = datetime.now().date() + timedelta(days=1)
     reminders = appointments_df[appointments_df['Date'] == tomorrow_date]
-    reminder_messages = []
-    for _, row in reminders.iterrows():
-        message = f"Reminder: You have an appointment scheduled on {row['Date']} at {row['Time']}. Please arrive 10 minutes early."
-        reminder_messages.append((row['Patient ID'], message))
-    return reminder_messages   
+    
+    reminder_messages = [
+        (row['Patient ID'], reminder_template.format(date=row['Date'], time=row['Time']))
+        for _, row in reminders.iterrows()
+    ]
+    
+    return reminder_messages 
 
 # Streamlit App
 
