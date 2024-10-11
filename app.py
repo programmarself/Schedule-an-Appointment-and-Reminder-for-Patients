@@ -50,7 +50,24 @@ def reschedule_appointment(appointment_id, new_date, new_start_time, appointment
     return appointments_df
 
 # Function to send reminders via email or SMS
+import smtplib
+from email.mime.text import MIMEText
+
 def send_reminder(patient_id, appointment_date, appointment_time, email_address, phone_number):
+    message = f"Reminder: You have an appointment on {appointment_date} at {appointment_time}."
+    
+    # Sending email (example with SMTP)
+    msg = MIMEText(message)
+    msg['Subject'] = 'Appointment Reminder'
+    msg['From'] = 'your_email@example.com'
+    msg['To'] = email_address
+    
+    with smtplib.SMTP('smtp.example.com') as server:
+        server.login('your_email@example.com', 'your_password')
+        server.sendmail('your_email@example.com', [email_address], msg.as_string())
+    
+    # Placeholder for SMS sending logic
+    print(f"SMS to {phone_number}: {message}")
     # Implementation for sending email or SMS using appropriate libraries
     # ...
 
